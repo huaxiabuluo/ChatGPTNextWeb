@@ -77,6 +77,9 @@ export function List(props: {
     | null
     | undefined;
 }) {
+  if (Array.isArray(props.children) && !props.children.filter(Boolean).length) {
+    return null;
+  }
   return <div className={styles.list}>{props.children}</div>;
 }
 

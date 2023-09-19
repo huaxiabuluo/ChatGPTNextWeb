@@ -30,7 +30,7 @@ import {
   showConfirm,
   showToast,
 } from "./ui-lib";
-import { ModelConfigList } from "./model-config";
+// import { ModelConfigList } from "./model-config";
 
 import { IconButton } from "./button";
 import {
@@ -222,7 +222,7 @@ function DangerItems() {
 
   return (
     <List>
-      <ListItem
+      {/* <ListItem
         title={Locale.Settings.Danger.Reset.Title}
         subTitle={Locale.Settings.Danger.Reset.SubTitle}
       >
@@ -235,7 +235,7 @@ function DangerItems() {
           }}
           type="danger"
         />
-      </ListItem>
+      </ListItem> */}
       <ListItem
         title={Locale.Settings.Danger.Clear.Title}
         subTitle={Locale.Settings.Danger.Clear.SubTitle}
@@ -482,7 +482,7 @@ function SyncItems() {
   return (
     <>
       <List>
-        <ListItem
+        {/* <ListItem
           title={Locale.Settings.Sync.CloudState}
           subTitle={
             syncStore.lastProvider
@@ -516,7 +516,7 @@ function SyncItems() {
               />
             )}
           </div>
-        </ListItem>
+        </ListItem> */}
 
         <ListItem
           title={Locale.Settings.Sync.LocalState}
@@ -670,7 +670,7 @@ export function Settings() {
             </Popover>
           </ListItem>
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.Update.Version(currentVersion ?? "unknown")}
             subTitle={
               checkingUpdate
@@ -693,7 +693,7 @@ export function Settings() {
                 onClick={() => checkUpdate(true)}
               />
             )}
-          </ListItem>
+          </ListItem> */}
 
           <ListItem title={Locale.Settings.SendKey}>
             <Select
@@ -881,9 +881,7 @@ export function Settings() {
                 }}
               />
             </ListItem>
-          ) : (
-            <></>
-          )}
+          ) : null}
 
           {!accessStore.hideUserApiKey ? (
             <>
@@ -942,7 +940,7 @@ export function Settings() {
             </ListItem>
           ) : null}
 
-          <ListItem
+          {/* <ListItem
             title={Locale.Settings.CustomModel.Title}
             subTitle={Locale.Settings.CustomModel.SubTitle}
           >
@@ -956,10 +954,10 @@ export function Settings() {
                 )
               }
             ></input>
-          </ListItem>
+          </ListItem> */}
         </List>
 
-        <List>
+        {/* <List>
           <ModelConfigList
             modelConfig={config.modelConfig}
             updateConfig={(updater) => {
@@ -968,7 +966,7 @@ export function Settings() {
               config.update((config) => (config.modelConfig = modelConfig));
             }}
           />
-        </List>
+        </List> */}
 
         {shouldShowPromptModal && (
           <UserPromptModal onClose={() => setShowPromptModal(false)} />

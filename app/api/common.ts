@@ -5,14 +5,12 @@ const DEFAULT_PROTOCOL = "https";
 const PROTOCOL = process.env.PROTOCOL || DEFAULT_PROTOCOL;
 const BASE_URL = process.env.BASE_URL || OPENAI_URL;
 const DISABLE_GPT4 = !!process.env.DISABLE_GPT4;
+const AZURE_API_VERSION = process.env.AZURE_API_VERSION;
 
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
   const authValue = req.headers.get("Authorization") ?? "";
-  const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
-    "/api/openai/",
-    "",
-  );
+  const openaiPath = `${req.nextUrl.pathname}`.replace("/api/openai/v1", "");
 
   let baseUrl = BASE_URL;
 
@@ -20,7 +18,7 @@ export async function requestOpenai(req: NextRequest) {
     baseUrl = `${PROTOCOL}://${baseUrl}`;
   }
 
-  if (baseUrl.endsWith('/')) {
+  if (baseUrl.endsWith("/")) {
     baseUrl = baseUrl.slice(0, -1);
   }
 
@@ -31,19 +29,28 @@ export async function requestOpenai(req: NextRequest) {
     console.log("[Org ID]", process.env.OPENAI_ORG_ID);
   }
 
-  const timeoutId = setTimeout(() => {
-    controller.abort();
-  }, 10 * 60 * 1000);
+  const timeoutId = setTimeout(
+    () => {
+      controller.abort();
+    },
+    10 * 60 * 1000,
+  );
 
-  const fetchUrl = `${baseUrl}/${openaiPath}`;
+  const apiKey = authValue?.startsWith("Bearer ")
+    ? authValue.replace("Bearer ", "")
+    : undefined;
+
+  const searchParams = AZURE_API_VERSION
+    ? `?api-version=${AZURE_API_VERSION}`
+    : "";
+  // https://vesoft-gpt4.openai.azure.com/openai/deployments/gpt4/chat/completions?api-version=2023-08-01-preview
+  // https://vesoft-gpt4.openai.azure.com/openai/deployments/gpt4/api/openai/chat/completions?api-version=2023-08-01-preview
+  const fetchUrl = `${baseUrl}${openaiPath}${searchParams}`;
   const fetchOptions: RequestInit = {
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
-      Authorization: authValue,
-      ...(process.env.OPENAI_ORG_ID && {
-        "OpenAI-Organization": process.env.OPENAI_ORG_ID,
-      }),
+      ...(apiKey && { "api-key": apiKey }),
     },
     method: req.method,
     body: req.body,
