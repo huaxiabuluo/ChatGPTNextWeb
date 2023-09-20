@@ -33,9 +33,9 @@ export default function RootLayout({
   const host = headersInstance.get("host");
   const gTag = (() => {
     if (host === "chat.vesoft-inc.com") {
-      return "G-3YKSQ9EXB9";
-    } else if (host === "chat.vesoft-inc.com") {
       return "G-1RM5M6WEGE";
+    } else if (host === "chatbot.vesoft-inc.com") {
+      return "G-3YKSQ9EXB9";
     }
     return "G-K2M2Y7RSCK";
   })();
