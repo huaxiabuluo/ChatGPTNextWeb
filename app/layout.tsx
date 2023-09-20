@@ -4,6 +4,7 @@ import "./styles/markdown.scss";
 import "./styles/highlight.scss";
 import { getClientConfig } from "./config/client";
 import { type Metadata } from "next";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "ChatGPT Next Web",
@@ -28,12 +29,31 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const headersInstance = headers();
+  const host = headersInstance.get("host");
+  const gTag = (() => {
+    if (host === "chat.vesoft-inc.com") {
+      return "G-3YKSQ9EXB9";
+    } else if (host === "chat.vesoft-inc.com") {
+      return "G-1RM5M6WEGE";
+    }
+    return "G-K2M2Y7RSCK";
+  })();
   return (
     <html lang="en">
       <head>
         <meta name="config" content={JSON.stringify(getClientConfig())} />
         <link rel="manifest" href="/site.webmanifest"></link>
         <script src="/serviceWorkerRegister.js" defer></script>
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${gTag}`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${gTag}');`,
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>
